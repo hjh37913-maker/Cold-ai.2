@@ -30,7 +30,26 @@ jobs:
           gradle-version: '8.7'
 
       - name: Build debug APK
-        run: gradle assembleDebug --no-daemon --stacktrace
+        run: |
+          set +e
+          gradle assembleDebug --no-daemon --console=plain > build.log 2>&1
+          code=$?
+          echo "Exit code: $code"
+          echo "===== ERRORS ====="
+          grep -n -E "^e: |error:|Unresolved|Could not" build.log | head -60
+          echo "===== WHAT WENT WRONG ====="
+          grep -A 10 "What went wrong" build.log | head -40
+          echo "===== LAST 30 LINES ====="
+          tail -n 30 build.log
+          exit $code
+
+      - name: Upload full build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          if-no-files-found: ignore
 
       - name: Verify APK exists
         run: |
