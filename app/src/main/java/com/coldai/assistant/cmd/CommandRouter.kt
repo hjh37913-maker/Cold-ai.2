@@ -143,9 +143,11 @@ object CommandRouter {
     }
 
     private fun lookup(ctx: Context, name: String): String? {
-        val p = ContactsContract.CommonDataKinds.Phone
         ctx.contentResolver.query(
-            p.CONTENT_URI, arrayOf(p.NUMBER), "${p.DISPLAY_NAME} LIKE ?", arrayOf("%$name%"), null
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER),
+            ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?",
+            arrayOf("%" + name + "%"), null
         )?.use { if (it.moveToFirst()) return it.getString(0) }
         return null
     }

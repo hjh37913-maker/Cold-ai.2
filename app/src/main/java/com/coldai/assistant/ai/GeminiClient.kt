@@ -37,7 +37,7 @@ object GeminiClient {
             val conn = URL(
                 "https://generativelanguage.googleapis.com/v1beta/models/${Uri.encode(model)}:generateContent"
             ).openConnection() as HttpURLConnection
-            cont.invokeOnCancellation { try { conn.disconnect() } catch (_: Exception) { } }
+            cont.invokeOnCancellation { try { conn.disconnect() } catch (e: Exception) { } }
             thread {
                 try {
                     conn.requestMethod = "POST"

@@ -29,9 +29,9 @@ class VoiceManager(private val app: Context) {
     fun speak(text: String, lang: String, rate: Float, pitch: Float, voice: String, done: () -> Unit) {
         val t = tts
         if (t == null || !ttsReady.value) { done(); return }
-        t.language = Locale(lang)
+        t.setLanguage(Locale(lang))
         if (voice.isNotEmpty()) {
-            try { t.voices?.firstOrNull { it.name == voice && it.locale.language == lang }?.let { t.voice = it } } catch (e: Exception) { }
+            try { t.voices?.firstOrNull { it.name == voice && it.locale.language == lang }?.let { v -> t.setVoice(v) } } catch (e: Exception) { }
         }
         t.setSpeechRate(rate)
         t.setPitch(pitch)
